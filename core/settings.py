@@ -21,7 +21,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
 ]
 
-
+# fmt: off
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -29,15 +29,20 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
+    "django_extensions",
+
+    "accounts.apps.AccountsConfig",
+    "blog.apps.BlogConfig",
 ]
+
 
 if DEBUG:
     INSTALLED_APPS += [
         "debug_toolbar",
-        "django_extensions",
     ]
 
-
+# fmt: on
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -118,3 +123,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 LOGIN_REDIRECT_URL = "/"
+
+AUTH_USER_MODEL = "accounts.User"
