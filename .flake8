@@ -1,0 +1,20 @@
+[flake8]
+exclude =
+    .git,
+    .gitignore,m
+    *.pot,
+    *.py[co],
+    migrations,
+    settings.py,
+    __pycache__,
+    docs/source/conf.py,
+    old,
+    build,
+    dist,
+    venv,
+    \venv\,
+    .\venv,
+    .tox
+max-complexity = 10
+max-line-length =120
+show-source = True
