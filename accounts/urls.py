@@ -2,6 +2,8 @@ from django.urls import include, path
 
 from accounts.views import RegisterFormView, UpdateProfile, UserProfile
 
+
+app_name = "accounts"
 urlpatterns = [
     path("", include("django.contrib.auth.urls")),
     path("register/", RegisterFormView.as_view(), name="register"),

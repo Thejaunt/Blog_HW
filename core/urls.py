@@ -2,6 +2,8 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
 
+
+app_name = "core"
 urlpatterns = [
     path("accounts/", include("accounts.urls")),
     path("", include("blog.urls")),
