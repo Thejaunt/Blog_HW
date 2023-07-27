@@ -121,6 +121,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_HOST = "admin@admin.com"
 
 LOGIN_REDIRECT_URL = "/"
 
