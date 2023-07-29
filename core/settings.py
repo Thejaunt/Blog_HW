@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
 
     "django_extensions",
 
@@ -57,6 +58,11 @@ if DEBUG:
     MIDDLEWARE += [
         "debug_toolbar.middleware.DebugToolbarMiddleware",
     ]
+    import socket
+
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
+
 
 ROOT_URLCONF = "core.urls"
 
@@ -104,6 +110,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+SITE_HOST = os.getenv("SITE_HOST", default="http://localhost:8000/")
+
+# sites framework
+SITE_ID = 1
 
 LANGUAGE_CODE = "en-us"
 
