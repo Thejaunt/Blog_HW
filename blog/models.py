@@ -20,7 +20,7 @@ class Post(models.Model):
     objects = models.Manager()
 
     class Meta:
-        ordering = ("created_at",)
+        ordering = ("-created_at",)
 
     def __str__(self):
         return f"{self.title}"
@@ -42,7 +42,10 @@ class Post(models.Model):
                 user = "Anonymous"
             from_email = settings.EMAIL_HOST
             recipients = set(us.email for us in User.objects.filter(is_superuser=True))
-            text = f"New Post: title: '{self.title}' has been added by '{user}' user"
+            text = (
+                f"New Post - title: {self.title} has been added by {user}\n"
+                f"link: {settings.SITE_HOST}{self.get_absolute_url()}"
+            )
             message = loader.render_to_string("blog/email_comment.html", {"message": text})
             send_mail(
                 subject=subject,
@@ -65,7 +68,7 @@ class Comment(models.Model):
     objects = models.Manager()
 
     class Meta:
-        ordering = ("created_at",)
+        ordering = ("-created_at",)
 
     def __str__(self):
         return self.text

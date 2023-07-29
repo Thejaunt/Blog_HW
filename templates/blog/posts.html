@@ -2,7 +2,7 @@
 {% block title %}Posts{% endblock title %}
 {% block content %}
 
-{% for obj in objs %}
+{% for obj in page_obj %}
     <h4>Title: {{ obj.title }}</h4>
     <p>Created by: {{ obj.user.username }}</p>
     <p>Created: {{ obj.created_at }}</p>
