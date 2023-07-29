@@ -1,0 +1,18 @@
+{% extends "base_generic.html" %}
+{% block title %}Personal Posts{% endblock title %}
+{% block content %}
+
+{% for obj in objs %}
+    <h4>Title: {{ obj.title }}</h4>
+    <p>Created by: {{ request.user.username }}</p>
+    <p>Created: {{ obj.created_at }}</p>
+    <p>Last Updated: {{ obj.updated_at }}</p>
+
+    <p>Description: {{ obj.description }}</p>
+    <a href="{% url 'blog:post-detail' obj.pk %}">Detail</a>
+    <br>
+    -----------------------------
+    <br>
+{% endfor %}
+
+{% endblock content %}

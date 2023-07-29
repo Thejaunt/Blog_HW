@@ -1,0 +1,29 @@
+{% extends "base_generic.html" %} 
+{% block title %}Post Detail{% endblock title %}
+{% block content %}
+{% if not obj.approved %}
+<h3>The Post Is Under Review</h3>
+{% endif %}
+<h4>Title: {{ obj.title }}</h4>
+    <p>Created by: {{ obj.user.username }}</p>
+    <p>Created: {{ obj.created_at }}</p>
+    <p>Last Updated: {{ obj.updated_at }}</p>
+    <p>Description: {{ obj.description }}</p>
+    {% if is_creator %}
+        <button><a href="{% url 'blog:update-post' obj.pk %}">Update</a></button>
+    {% endif %}
+<h4>Comments ({{ com_count }})</h4>
+{% for comment in obj.comment_set.all %}
+
+    {% if comment.user %}
+        <p>{{ comment.user }} |
+    {% else %}
+        <p>Anonymous user |
+    {% endif %}
+    {{ comment.created_at }}</p>
+
+    <p>{{ comment.text }}</p>
+<hr>
+{% endfor %}
+
+{% endblock content %}
