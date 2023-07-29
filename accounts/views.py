@@ -11,7 +11,7 @@ from accounts.forms import RegisterForm
 class RegisterFormView(generic.FormView):
     template_name = "registration/register.html"
     form_class = RegisterForm
-    success_url = reverse_lazy("login")
+    success_url = reverse_lazy("blog:home")
 
     def form_valid(self, form):
         user = form.save()

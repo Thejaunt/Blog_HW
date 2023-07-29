@@ -1,0 +1,23 @@
+{% extends "base_generic.html" %}
+{% block title %}Personal Post Detail{% endblock title %}
+
+{% block content %}
+
+  {% if not obj.approved %}
+  <h3>The Post Is Under Review</h3>
+  {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <h1>ARE YOU SURE YOU WANT TO DELETE THE POST?</h1>
+        <a href="{% url 'blog:personal-post-detail' obj.pk%}" type="btn">Cancel</a>
+        <input type="submit" value="DELETE">
+    </form>
+  <h4>Title: {{ obj.title }}</h4>
+      <p>Created by: {{ request.user.username }}</p>
+      <p>Created: {{ obj.created_at }}</p>
+      <p>Last Updated: {{ obj.updated_at }}</p>
+      <p>Description: {{ obj.description }}</p>
+  \
+
+{% endblock content %}
