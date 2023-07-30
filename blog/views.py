@@ -77,8 +77,6 @@ def post_detail_view(request, pk):
                 messages.success(
                     request, "New Comment has been added. \n It will be shown in comments section after verification"
                 )
-            obj.refresh_from_db()
-            context["obj"] = obj
             return redirect("blog:post-detail", obj.pk)
 
     return render(request, "blog/post-detail.html", context)
