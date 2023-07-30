@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import (
     create_post,
+    contact_us,
     delete_post_view,
     home,
     personal_post_detail_view,
@@ -22,4 +23,5 @@ urlpatterns = [
     path("personal-post-detail/<int:pk>", personal_post_detail_view, name="personal-post-detail"),
     path("delete-post/<int:pk>", delete_post_view, name="delete-post"),
     path("public-profile/<str:username>", public_profile, name="public-profile"),
+    path("contact-us", contact_us, name="contact-us"),
 ]

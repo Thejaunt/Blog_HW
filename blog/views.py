@@ -1,10 +1,14 @@
+from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 from django.core.paginator import Paginator
 from django.db.models import Prefetch
 from django.shortcuts import render, get_object_or_404, redirect
+from django.template import loader
 
-from .forms import CreatePostForm, CommentForm, UpdatePostForm
+from .forms import CreatePostForm, ContactForm, CommentForm, UpdatePostForm
 from .models import Comment, Post
 
 
@@ -130,3 +134,26 @@ def delete_post_view(request, pk):
 def personal_posts_view(request):
     objs = Post.objects.filter(user=request.user)
     return render(request, "blog/personal-posts.html", {"objs": objs})
+
+
+def contact_us(request, get_user_models=None):
+    form = ContactForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+
+            subject = "Hallo Admin"
+            from_email = settings.EMAIL_HOST
+            user_email = form.cleaned_data.get("email")
+            recipients = [get_user_model().objects.filter(is_superuser=True, is_active=True).first(), ]
+            text = form.cleaned_data.get("text")
+            message = loader.render_to_string("blog/email-contact-us.html", {"message": text, "user_email": user_email})
+            send_mail(
+                subject=subject,
+                message=message,
+                from_email=from_email,
+                recipient_list=recipients,
+                fail_silently=False,
+            )
+            messages.success(request, "Your message has been successfully sent to admin")
+            return redirect("blog:home")
+    return render(request, "blog/contact-us.html", {"form": form})
