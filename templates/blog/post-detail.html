@@ -17,6 +17,13 @@
         {% endif %}
 
     <h4>Comments ({{ com_count }})</h4>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">ADD COMMENT</button>
+        </form>
+
+
         {% for comment in page_obj %}
 
             {% if comment.user %}

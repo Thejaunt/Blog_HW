@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 from django.db.models import Prefetch
 from django.shortcuts import render, get_object_or_404, redirect
 
-from .forms import CreatePostForm, UpdatePostForm
+from .forms import CreatePostForm, CommentForm, UpdatePostForm
 from .models import Comment, Post
 
 
@@ -56,8 +56,22 @@ def post_detail_view(request, pk):
     is_creator = False
     if request.user == obj.user:
         is_creator = True
-
     context = {"obj": obj, "com_count": com_count, "is_creator": is_creator, "is_paginated": True, "page_obj": page_obj}
+
+    form = CommentForm(request.POST or None)
+    context["form"] = form
+    if request.method == "POST":
+        if form.is_valid():
+            user = request.user
+            text = form.cleaned_data.get("text")
+            com = Comment(user=user, post=obj, text=text)
+            com.save()
+            context["form"] = CommentForm()
+            messages.success(
+                request,
+                "New Comment has been added. \n It will be shown in comments section after verification"
+            )
+
     return render(request, "blog/post-detail.html", context)
 
 
@@ -72,7 +86,7 @@ def create_post(request):
             post = Post(user=request.user, title=title, description=description, is_published=is_published)
             post.save()
             messages.success(request, "New post has been created")
-        return redirect("blog:post-detail", post.pk)
+            return redirect("blog:personal-post-detail", post.pk)
     return render(request, "blog/create-post.html", {"form": form})
 
 
