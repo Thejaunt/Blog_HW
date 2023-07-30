@@ -36,6 +36,8 @@ class Post(models.Model):
         super().save(*args, **kwargs)
 
         if new:
+            if self.user.is_superuser:
+                return
             subject = "New post"
             if self.user is not None:
                 user = self.user.username
@@ -84,6 +86,8 @@ class Comment(models.Model):
             subject = "New comment"
             if self.user is not None:
                 user = self.user.username
+                if self.user.is_superuser:
+                    return
             else:
                 user = "Anonymous"
 

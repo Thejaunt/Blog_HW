@@ -64,12 +64,22 @@ def post_detail_view(request, pk):
         if form.is_valid():
             user = request.user
             text = form.cleaned_data.get("text")
-            com = Comment(user=user, post=obj, text=text)
+
+            if user.is_anonymous:
+                com = Comment(post=obj, text=text)
+            else:
+                com = Comment(user=user, post=obj, text=text)
+            if request.user.is_superuser:
+                com.is_published = True
             com.save()
             context["form"] = CommentForm()
-            messages.success(
-                request, "New Comment has been added. \n It will be shown in comments section after verification"
-            )
+            if not request.user.is_superuser:
+                messages.success(
+                    request, "New Comment has been added. \n It will be shown in comments section after verification"
+                )
+            obj.refresh_from_db()
+            context["obj"] = obj
+            return redirect("blog:post-detail", obj.pk)
 
     return render(request, "blog/post-detail.html", context)
 
