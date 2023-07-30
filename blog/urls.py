@@ -7,6 +7,7 @@ from .views import (
     personal_posts_view,
     post_detail_view,
     posts_list_view,
+    public_profile,
     update_post,
 )
 
@@ -20,4 +21,5 @@ urlpatterns = [
     path("personal-posts/", personal_posts_view, name="personal-posts"),
     path("personal-post-detail/<int:pk>", personal_post_detail_view, name="personal-post-detail"),
     path("delete-post/<int:pk>", delete_post_view, name="delete-post"),
+    path("public-profile/<str:username>", public_profile, name="public-profile"),
 ]
