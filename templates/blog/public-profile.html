@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+{% block title %}Public profile{% endblock title %}
+{% block content %}
+<h2>{{ objs.first.user.username }}</h2>
+
+
+<h3>User Posts</h3>
+{% for obj in objs %}
+    <p>{{ obj.title }}</p>
+    <p>{{ obj.created_at }}</p>
+    <p>{{ obj.updated_at }}</p>
+    <a href="{% url 'blog:post-detail' obj.pk %}">Detail</a>
+    <hr>
+{% endfor %}
+
+{% endblock content %}

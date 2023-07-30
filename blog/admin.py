@@ -10,6 +10,8 @@ class PostAdmin(admin.ModelAdmin):
         "title",
         "description",
     ]
+    list_filter = ["is_published", "approved", "user"]
+    search_fields = ["is_published", "title", "id"]
     list_display = [
         "approved",
         "is_published",
@@ -25,7 +27,7 @@ class PostAdmin(admin.ModelAdmin):
 
 class CommentAdmin(admin.ModelAdmin):
     model = Comment
-    fields = ["is_published"]
+    fields = ["is_published", "text"]
     list_display = [
         "is_published",
         "created_at",

@@ -4,15 +4,13 @@
 
 {% for obj in page_obj %}
     <h4>Title: {{ obj.title }}</h4>
-    <p>Created by: {{ obj.user.username }}</p>
+    <p>Created by: <a href="{% url 'blog:public-profile' obj.user.username %}">{{ obj.user.username }}</a></p>
     <p>Created: {{ obj.created_at }}</p>
     <p>Last Updated: {{ obj.updated_at }}</p>
 
-    <p>Description: {{ obj.description }}</p>
+    <p>Description: {{ obj.description|truncatewords:15 }}</p>
     <a href="{% url 'blog:post-detail' obj.pk %}">Detail</a>
-    <br>
-    -----------------------------
-    <br>
+    <hr>
 {% endfor %}
 
 {% endblock content %}

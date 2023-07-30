@@ -12,6 +12,11 @@ def home(request):
     return render(request, "home.html")
 
 
+def public_profile(request, username):
+    objs = Post.objects.filter(user__username=username, is_published=True).select_related("user")
+    return render(request, "blog/public-profile.html", {"objs": objs})
+
+
 def posts_list_view(request):
     objs = Post.objects.filter(approved=True, is_published=True).prefetch_related("user")
     paginator = Paginator(objs, 5)
