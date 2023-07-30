@@ -68,8 +68,7 @@ def post_detail_view(request, pk):
             com.save()
             context["form"] = CommentForm()
             messages.success(
-                request,
-                "New Comment has been added. \n It will be shown in comments section after verification"
+                request, "New Comment has been added. \n It will be shown in comments section after verification"
             )
 
     return render(request, "blog/post-detail.html", context)
