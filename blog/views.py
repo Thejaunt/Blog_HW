@@ -140,11 +140,12 @@ def contact_us(request, get_user_models=None):
     form = ContactForm(request.POST or None)
     if request.method == "POST":
         if form.is_valid():
-
             subject = "Hallo Admin"
             from_email = settings.EMAIL_HOST
             user_email = form.cleaned_data.get("email")
-            recipients = [get_user_model().objects.filter(is_superuser=True, is_active=True).first(), ]
+            recipients = [
+                get_user_model().objects.filter(is_superuser=True, is_active=True).first(),
+            ]
             text = form.cleaned_data.get("text")
             message = loader.render_to_string("blog/email-contact-us.html", {"message": text, "user_email": user_email})
             send_mail(
