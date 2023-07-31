@@ -1,10 +1,30 @@
 {% extends "base_generic.html" %}
 {% block title %}Profile{% endblock title %}
 {% block content %}
+{% load static %}
+
+            {% if request.user.profile.image %}
+
+                <figure class="figure">
+                  <img src="{{ request.user.profile.image.url }}" class="figure-img img-fluid rounded-circle" alt="Profile photo" width="200" height="200">
+                  <figcaption class="figure-caption">Your current profile image</figcaption>
+                </figure>
+
+            {% else %}
+
+                <figure class="figure">
+                  <img src="{% static 'img/dummy-prof-img.png' %}" class="figure-img img-fluid rounded-circle" alt="Profile photo" width="200" height="200">
+                  <figcaption class="figure-caption">You haven't uploaded profile image yet</figcaption>
+                </figure>
+
+            {% endif %}
+
+<p><a href="{% url 'profile_img_update' %}">Update Profile Image</a></p>
   <p>First name: {{ object.first_name }}</p>
   <p>Last name: {{ object.last_name }}</p>
   <p>Username: {{ object.username }}</p>
   <p>Email: {{ object.email }}</p>
-  <a href="{% url 'update_profile' %}">Update my profile</a>
+    <p><a href="{% url 'update_profile' %}">Update Profile Info</a></p>
+  <p><a href="{% url 'profile_bio_update' %}">Update Profile Bio:</a> {{ object.profile.bio }}</p>
 
 {% endblock %}

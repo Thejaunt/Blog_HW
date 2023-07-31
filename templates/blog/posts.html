@@ -1,10 +1,24 @@
 {% extends "base_generic.html" %}
+{% load static %}
 {% block title %}Posts{% endblock title %}
 {% block content %}
 
 {% for obj in page_obj %}
     <h4>Title: {{ obj.title }}</h4>
-    <p>Created by: <a href="{% url 'blog:public-profile' obj.user.username %}">{{ obj.user.username }}</a></p>
+
+    <p>Created by:
+            {% if obj.user.profile.image %}
+                  <img src="{{ obj.user.profile.image.url }}"
+                       class="figure-img img-fluid rounded-circle"
+                       alt="Profile photo" width="40" height="40">
+            {% else %}
+                  <img src="{% static 'img/dummy-prof-img.png' %}"
+                       class="figure-img img-fluid rounded-circle"
+                       alt="Profile photo" width="40" height="40">
+            {% endif %}
+        <a href="{% url 'blog:public-profile' obj.user.username %}">{{ obj.user.username }}</a>
+    </p>
+
     <p>Created: {{ obj.created_at }}</p>
     <p>Last Updated: {{ obj.updated_at }}</p>
 

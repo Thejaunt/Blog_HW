@@ -1,11 +1,35 @@
 {% extends "base_generic.html" %}
+{% load static %}
 {% block title %}Public profile{% endblock title %}
 {% block content %}
-<h2>{{ objs.first.user.username }}</h2>
+<h2>User: {{ objs.username }}</h2>
 
+
+            {% if objs.profile.image %}
+
+                <figure class="figure">
+                  <img src="{{ objs.profile.image.url }}" class="figure-img img-fluid rounded-circle" alt="Profile photo" width="200" height="200">
+                  <figcaption class="figure-caption">Users current profile image</figcaption>
+                </figure>
+
+            {% else %}
+
+                <figure class="figure">
+                  <img src="{% static 'img/dummy-prof-img.png' %}" class="figure-img img-fluid rounded-circle" alt="Profile photo" width="200" height="200">
+                  <figcaption class="figure-caption">User hasn't uploaded profile image yet</figcaption>
+                </figure>
+
+            {% endif %}
+
+{% if objs.profile.bio %}
+<p>{{ objs.profile.bio }}</p>
+{% else %}
+<p>User yet doesn't have bio</p>
+
+{% endif %}
 
 <h3>User Posts</h3>
-{% for obj in objs %}
+{% for obj in objs.post_set.all %}
     <p>{{ obj.title }}</p>
     <p>{{ obj.created_at }}</p>
     <p>{{ obj.updated_at }}</p>

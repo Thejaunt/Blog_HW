@@ -1,5 +1,5 @@
 {% extends "base_generic.html" %}
-{% block title %}Update Profile{% endblock title%}
+{% block title %}Update Profile Image{% endblock title%}
 {% block content %}
 {% load static %}
 
@@ -19,13 +19,13 @@
 
             {% endif %}
 
-  <form method="POST" class="form-group">
+  <form method="POST" class="form-group" enctype="multipart/form-data">
     {% csrf_token %}
     <table>
       {{ form.as_table }}
     </table>
     <button type="submit" class="btn btn-success">Update</button>
-    <a href="{% url 'password_change' %}" class="btn btn-info">Change password</a>
+    <a href="{% url 'profile' %}" class="btn btn-info">Cancel</a>
   </form>
 
 {% endblock %}

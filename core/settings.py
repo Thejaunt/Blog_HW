@@ -21,6 +21,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
 ]
 
+
 # fmt: off
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -32,18 +33,19 @@ INSTALLED_APPS = [
     "django.contrib.sites",
 
     "django_extensions",
+    "django_cleanup.apps.CleanupConfig",
 
     "accounts.apps.AccountsConfig",
     "blog.apps.BlogConfig",
 ]
 
-
 if DEBUG:
     INSTALLED_APPS += [
         "debug_toolbar",
     ]
-
 # fmt: on
+
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -124,8 +126,16 @@ USE_I18N = True
 USE_TZ = True
 
 
+# Static files
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [
+    BASE_DIR / "accounts/static",
+    BASE_DIR / "blog/static",
+]
 
+MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = "/media/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

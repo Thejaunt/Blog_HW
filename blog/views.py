@@ -17,12 +17,18 @@ def home(request):
 
 
 def public_profile(request, username):
-    objs = Post.objects.filter(user__username=username, is_published=True).select_related("user")
+    ob = Post.objects.filter(is_published=True)
+    objs = (
+        get_user_model()
+        .objects.select_related("profile")
+        .prefetch_related(Prefetch("post_set", queryset=ob))
+        .get(username=username)
+    )
     return render(request, "blog/public-profile.html", {"objs": objs})
 
 
 def posts_list_view(request):
-    objs = Post.objects.filter(approved=True, is_published=True).prefetch_related("user")
+    objs = Post.objects.filter(approved=True, is_published=True).select_related("user", "user__profile")
     paginator = Paginator(objs, 5)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
@@ -136,7 +142,7 @@ def personal_posts_view(request):
     return render(request, "blog/personal-posts.html", {"objs": objs})
 
 
-def contact_us(request, get_user_models=None):
+def contact_us(request):
     form = ContactForm(request.POST or None)
     if request.method == "POST":
         if form.is_valid():
