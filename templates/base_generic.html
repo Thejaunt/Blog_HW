@@ -50,18 +50,49 @@
 
         <ul class="sidebar-nav">
           {% if user.is_authenticated %}
-            User: {{ user.get_username }}
+
+            {% if request.user.profile.image %}
+                <figure class="figure">
+                  <a href="{% url 'profile' %}">
+                    <img src="{{ request.user.profile.image.url }}"
+                         class="figure-img img-fluid rounded-circle"
+                         alt="Profile photo" width="50" height="50">
+                  </a>
+                  <figcaption class="figure-caption">{{ request.user.username }}</figcaption>
+                </figure>
+            {% else %}
+                <figure class="figure">
+                  <a href="{% url 'profile' %}">
+                    <img src="{% static 'img/dummy-prof-img.png' %}"
+                         class="figure-img img-fluid rounded-circle"
+                         alt="Profile photo" width="50" height="50">
+                  </a>
+                  <figcaption class="figure-caption">{{ request.user.username }}</figcaption>
+                </figure>
+            {% endif %}
+
+
             <li><a href="{% url 'profile' %}">My profile</a></li>
             <li><a href="{% url 'blog:personal-posts' %}">Personal Posts</a></li>
             <li><a href="{% url 'logout' %}?next={{ request.path }}">Logout</a></li>
           {% else %}
+
+                <figure class="figure">
+                  <a href="{% url 'profile' %}">
+                    <img src="{% static 'img/dummy-prof-img.png' %}"
+                         class="figure-img img-fluid rounded-circle"
+                         alt="Profile photo" width="50" height="50">
+                  </a>
+                  <figcaption class="figure-caption">Anonymous</figcaption>
+                </figure>
+
             <li><a href="{% url 'login' %}?next={{ request.path }}">Login</a></li>
             <li><a href="{% url 'register' %}?next={{ request.path }}">Register</a></li>
           {% endif %}
         </ul>
 
 
-      {% endblock %}
+      {% endblock sidebar %}
 
   </div>
 

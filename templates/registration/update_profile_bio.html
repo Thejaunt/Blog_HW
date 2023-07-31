@@ -1,0 +1,14 @@
+{% extends "base_generic.html" %}
+{% block title %}Update Profile Bio{% endblock title%}
+{% block content %}
+
+  <form method="POST" class="form-group">
+    {% csrf_token %}
+    <table>
+      {{ form.as_table }}
+    </table>
+    <button type="submit" class="btn btn-success">Update</button>
+    <a href="{% url 'profile' %}" class="btn btn-info">Cancel</a>
+  </form>
+
+{% endblock %}

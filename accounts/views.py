@@ -1,11 +1,15 @@
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, get_user_model
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.shortcuts import redirect, render
 
 from django.urls import reverse_lazy
 from django.views import generic
 
-from accounts.forms import RegisterForm
+from accounts.forms import RegisterForm, ProfileImageForm, ProfileBioForm
+from accounts.models import Profile
 
 
 class RegisterFormView(generic.FormView):
@@ -40,3 +44,37 @@ class UpdateProfile(LoginRequiredMixin, SuccessMessageMixin, generic.UpdateView)
     def get_object(self, queryset=None):
         user = self.request.user
         return user
+
+
+@login_required
+def update_profile_img(request):
+    prof = Profile.objects.filter(user=request.user.pk).last()
+    if not prof:
+        prof = Profile.objects.create(user=request.user)
+    form = ProfileImageForm(request.POST or None, request.FILES or None, instance=prof)
+    if request.method == "POST":
+        if form.is_valid():
+            if form.has_changed():
+                form.save()
+                messages.success(request, "Profile image has been updated")
+            else:
+                messages.success(request, "Profile image hasn't been changed")
+            return redirect("profile")
+    return render(request, "registration/update_profile_img.html", {"form": form})
+
+
+@login_required
+def update_profile_bio(request):
+    prof = Profile.objects.filter(user=request.user.pk).last()
+    if not prof:
+        prof = Profile.objects.create(user=request.user)
+    form = ProfileBioForm(request.POST or None, instance=prof)
+    if request.method == "POST":
+        if form.is_valid():
+            if form.has_changed():
+                form.save()
+                messages.success(request, "Profile bio has been updated")
+            else:
+                messages.success(request, "Profile bio hasn't been changed")
+            return redirect("profile")
+    return render(request, "registration/update_profile_img.html", {"form": form})
