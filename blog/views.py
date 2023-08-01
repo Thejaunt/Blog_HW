@@ -27,12 +27,16 @@ def public_profile(request, username):
     return render(request, "blog/public-profile.html", {"objs": objs})
 
 
-def posts_list_view(request):
-    objs = Post.objects.filter(approved=True, is_published=True).select_related("user", "user__profile")
-    paginator = Paginator(objs, 5)
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-    return render(request, "blog/posts.html", {"page_obj": page_obj, "is_paginated": True})
+@login_required
+def personal_posts_view(request):
+    _filter = request.GET.get("filter") or "all"
+    objs = Post.objects.filter(user=request.user)
+    if _filter == "published":
+        objs = Post.objects.filter(user=request.user, is_published=True)
+    if _filter == "unpublished":
+        objs = Post.objects.filter(user=request.user, is_published=False)
+
+    return render(request, "blog/personal-posts.html", {"objs": objs})
 
 
 @login_required
@@ -53,6 +57,14 @@ def personal_post_detail_view(request, pk):
         is_creator = True
     context = {"obj": obj, "com_count": com_count, "is_creator": is_creator, "is_paginated": True, "page_obj": page_obj}
     return render(request, "blog/personal-post-detail.html", context)
+
+
+def posts_list_view(request):
+    objs = Post.objects.filter(approved=True, is_published=True).select_related("user", "user__profile")
+    paginator = Paginator(objs, 5)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    return render(request, "blog/posts.html", {"page_obj": page_obj, "is_paginated": True})
 
 
 def post_detail_view(request, pk):
@@ -134,12 +146,6 @@ def delete_post_view(request, pk):
         obj.delete()
         return redirect("blog:personal-posts")
     return render(request, "blog/delete-post.html", {"obj": obj})
-
-
-@login_required
-def personal_posts_view(request):
-    objs = Post.objects.filter(user=request.user)
-    return render(request, "blog/personal-posts.html", {"objs": objs})
 
 
 def contact_us(request):
