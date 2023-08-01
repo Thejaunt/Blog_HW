@@ -1,7 +1,18 @@
 {% extends "base_generic.html" %}
 {% block title %}Personal Posts{% endblock title %}
 {% block content %}
-
+<form method="get">
+    <input type="hidden" name="filter" value="all">
+    <button type="submit">all</button>
+</form>
+<form method="get">
+    <input type="hidden" name="filter" value="published">
+    <button type="submit">published</button>
+</form>
+<form method="get">
+    <input type="hidden" name="filter" value="unpublished">
+    <button type="submit">not published</button>
+</form>
 {% for obj in objs %}
     <h4>Title: {{ obj.title }}</h4>
     <p>Created by: {{ request.user.username }}</p>
