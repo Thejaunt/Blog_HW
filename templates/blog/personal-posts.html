@@ -3,15 +3,15 @@
 {% block content %}
 <form method="get">
     <input type="hidden" name="filter" value="all">
-    <button type="submit">all</button>
+    <button class="btn btn-link" type="submit">all</button>
 </form>
 <form method="get">
     <input type="hidden" name="filter" value="published">
-    <button type="submit">published</button>
+    <button class="btn btn-link" type="submit">published</button>
 </form>
 <form method="get">
     <input type="hidden" name="filter" value="unpublished">
-    <button type="submit">not published</button>
+    <button class="btn btn-link" type="submit">not published</button>
 </form>
 {% for obj in objs %}
     <h4>Title: {{ obj.title }}</h4>

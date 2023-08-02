@@ -1,15 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Contact Us</title>
-</head>
-<body>
-<form method="POST">
+{% extends "base_generic.html" %}
+{% block title %}Contact Us{% endblock title %}
+
+{% block content %}
+<h3>Contact Us</h3>
+    <form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Send</button>
+    <button class="btn btn-primary btn-lg" type="submit">Send</button>
 </form>
-
-</body>
-</html>
+{% endblock content %}
