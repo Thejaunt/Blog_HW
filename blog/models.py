@@ -1,9 +1,8 @@
 from django.contrib.auth import get_user_model
-from django.core.mail import send_mail
 from django.db import models
-from django.template import loader
 from core import settings
 from django.urls import reverse
+from .tasks import email_new_record
 
 User = get_user_model()
 
@@ -11,10 +10,10 @@ User = get_user_model()
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    title = models.CharField(max_length=70)
-    description = models.TextField(max_length=500)
+    title = models.CharField(max_length=100)
+    description = models.TextField(max_length=1000)
     approved = models.BooleanField(default=True)
-    is_published = models.BooleanField(default=True)
+    is_published = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -45,19 +44,19 @@ class Post(models.Model):
                 user = "Anonymous"
             from_email = settings.EMAIL_HOST
             admin_url = reverse("admin:blog_post_change", args=(self.pk,))
-            recipients = set(us.email for us in User.objects.filter(is_superuser=True))
-            text = (
-                f"New Post - title: {self.title} has been added by {user}\n"
-                f"admin link: {settings.SITE_HOST}{admin_url}\n"
-                f"site link: {settings.SITE_HOST}{self.get_absolute_url()}\n"
-            )
-            message = loader.render_to_string("blog/email_comment.html", {"message": text})
-            send_mail(
-                subject=subject,
-                message=message,
-                from_email=from_email,
-                recipient_list=recipients,
-                fail_silently=False,
+            recipients = list(set([str(us.email) for us in User.objects.filter(is_superuser=True)]))
+            print(recipients)
+            text = f"""
+            New Post - title: {self.title} has been added by {user} \n
+            admin link: {settings.SITE_HOST}{admin_url}\n
+            site link: {settings.SITE_HOST}{self.get_absolute_url()} \n"""
+            email_new_record.apply_async(
+                (
+                    subject,
+                    text,
+                    from_email,
+                    recipients,
+                ),
             )
 
 
@@ -93,18 +92,21 @@ class Comment(models.Model):
 
             from_email = settings.EMAIL_HOST
             admin_url = reverse("admin:blog_comment_change", args=(self.pk,))
-            recipients = set([*[su.email for su in User.objects.filter(is_superuser=True)], self.post.user.email])
+            recipients = list(
+                set([*[str(u.email) for u in User.objects.filter(is_superuser=True)], self.post.user.email])
+            )
             text = (
                 f"New comment for Post title:{self.post.title},\n"
                 f"admin link: {settings.SITE_HOST}{admin_url}\n"
                 f"site link: {settings.SITE_HOST}{self.post.get_absolute_url()}\n"
                 f"has been added by {user} user"
             )
-            message = loader.render_to_string("blog/email_comment.html", {"message": text})
-            send_mail(
-                subject=subject,
-                message=message,
-                from_email=from_email,
-                recipient_list=recipients,
-                fail_silently=False,
+
+            email_new_record.apply_async(
+                (
+                    subject,
+                    text,
+                    from_email,
+                    recipients,
+                ),
             )

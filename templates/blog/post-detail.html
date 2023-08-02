@@ -3,8 +3,11 @@
 {% block content %}
     {% if not obj.approved %}
         <h3>The Post Is Under Review</h3>
-    {% endif %}
-
+        {% if obj.user == request.user %}
+<p>Review your post </p>
+            <p><a href="{% url 'blog:personal-post-detail' obj.pk %}">Go to your post</a> </p>
+        {% endif %}
+    {% else %}
     <h4>Title: {{ obj.title }}</h4>
         <p>Created by: {{ obj.user.username }}</p>
         <p>Created: {{ obj.created_at }}</p>
@@ -36,5 +39,5 @@
             <p>{{ comment.text }}</p>
         <hr>
         {% endfor %}
-
+{% endif %}
 {% endblock content %}

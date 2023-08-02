@@ -7,7 +7,12 @@ from django.db import models
 
 # fmt: off
 class User(AbstractUser):
-    ...
+
+    def save(self, *args, **kwargs):
+        new = not self.pk
+        super().save(*args, **kwargs)
+        if new:
+            Profile.objects.create(user_id=self.pk)
 
 # fmt: on
 
@@ -21,4 +26,4 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
 
     image = models.ImageField(upload_to=user_dir_path, blank=True, null=True, max_length=255)
-    bio = models.TextField(null=True)
+    bio = models.TextField(null=True, blank=True)
