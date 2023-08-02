@@ -14,6 +14,9 @@ class User(AbstractUser):
         if new:
             Profile.objects.create(user_id=self.pk)
 
+    def __str__(self):
+        return f"username: {self.username}\n, email: {self.email}"
+
 # fmt: on
 
 
@@ -27,3 +30,6 @@ class Profile(models.Model):
 
     image = models.ImageField(upload_to=user_dir_path, blank=True, null=True, max_length=255)
     bio = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user.username}"

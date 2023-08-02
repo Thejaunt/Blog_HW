@@ -133,8 +133,10 @@ def update_post(request, pk):
     if request.method == "POST":
         if form.is_valid():
             if form.has_changed():
+                form.save(commit=False)
+                obj.approved = False
                 form.save()
-                messages.success(request, "The post has been updated")
+                messages.success(request, "The post has been updated. And Under admins review")
             else:
                 messages.success(request, "The post hasn't been changed")
             return redirect("blog:post-detail", obj.pk)

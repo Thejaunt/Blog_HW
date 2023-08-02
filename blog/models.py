@@ -45,7 +45,6 @@ class Post(models.Model):
             from_email = settings.EMAIL_HOST
             admin_url = reverse("admin:blog_post_change", args=(self.pk,))
             recipients = list(set([str(us.email) for us in User.objects.filter(is_superuser=True)]))
-            print(recipients)
             text = f"""
             New Post - title: {self.title} has been added by {user} \n
             admin link: {settings.SITE_HOST}{admin_url}\n
