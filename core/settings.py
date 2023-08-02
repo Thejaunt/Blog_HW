@@ -148,6 +148,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "accounts/static",
     BASE_DIR / "blog/static",
 ]
+
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
@@ -183,3 +184,5 @@ CELERY_TASK_SERIALIZER = "json"
 LOGIN_REDIRECT_URL = "/"
 
 AUTH_USER_MODEL = "accounts.User"
+
+ADMINS = [("admin", "thejauntthejaunt@gmail.com")]

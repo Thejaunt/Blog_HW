@@ -159,9 +159,9 @@ def contact_us(request):
             subject = "Hallo Admin"
             from_email = settings.EMAIL_HOST
             user_email = form.cleaned_data.get("email")
-            recipients = [
-                str(get_user_model().objects.filter(is_superuser=True, is_active=True).first().email),
-            ]
+            admins = get_user_model().objects.filter(is_superuser=True, is_active=True)
+            recipients = [*[a.email for a in admins], *[e[1] for e in settings.ADMINS]]
+            recipients = list(set(recipients))
             text = form.cleaned_data.get("text")
             email_contact_task.apply_async(
                 (
