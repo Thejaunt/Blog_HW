@@ -8,11 +8,13 @@ class CommentInline(admin.TabularInline):
 
 
 class PostAdmin(admin.ModelAdmin):
-    inlines = [CommentInline]
+    # inlines = [CommentInline]
+    list_display_links = ["title"]
     model = Post
 
     fields = [
-        "approved",
+        "user",
+        ("approved", "is_published"),
         "title",
         "description",
     ]
