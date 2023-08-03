@@ -4,6 +4,11 @@ from django.contrib import admin
 from django.urls import include, path
 
 
+admin.site.site_header = "Blog Admin Panel"
+admin.site.site_title = "Site Administration"
+admin.site.index_title = "Blog Admin"
+
+
 app_name = "core"
 urlpatterns = [
     path("accounts/", include("accounts.urls")),

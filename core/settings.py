@@ -148,6 +148,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "accounts/static",
     BASE_DIR / "blog/static",
 ]
+
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
@@ -183,3 +184,8 @@ CELERY_TASK_SERIALIZER = "json"
 LOGIN_REDIRECT_URL = "/"
 
 AUTH_USER_MODEL = "accounts.User"
+
+lst_of_admins = []
+for a in os.getenv("ADMINS", "admin,example@mail.com").split(";"):
+    lst_of_admins.append((a.split(",")[0], a.split(",")[1]))
+ADMINS = lst_of_admins
