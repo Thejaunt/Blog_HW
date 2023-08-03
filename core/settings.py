@@ -189,4 +189,3 @@ lst_of_admins = []
 for a in os.getenv("ADMINS").split(";"):
     lst_of_admins.append((a.split(",")[0], a.split(",")[1]))
 ADMINS = lst_of_admins
-
