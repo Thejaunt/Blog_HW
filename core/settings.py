@@ -185,4 +185,8 @@ LOGIN_REDIRECT_URL = "/"
 
 AUTH_USER_MODEL = "accounts.User"
 
-ADMINS = [("admin", "thejauntthejaunt@gmail.com")]
+lst_of_admins = []
+for a in os.getenv("ADMINS").split(";"):
+    lst_of_admins.append((a.split(",")[0], a.split(",")[1]))
+ADMINS = lst_of_admins
+
