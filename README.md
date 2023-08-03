@@ -1,4 +1,6 @@
 # Blog_HW
+python version 3.11.3
+
 Blog post web app.
 ![blog.png](blog.png)
 
