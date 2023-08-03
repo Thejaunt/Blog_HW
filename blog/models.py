@@ -7,6 +7,17 @@ from .tasks import email_new_record
 User = get_user_model()
 
 
+def _email_sender(subject, text, from_email, recipients):
+    email_new_record.apply_async(
+        (
+            subject,
+            text,
+            from_email,
+            recipients,
+        ),
+    )
+
+
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -47,16 +58,18 @@ class Post(models.Model):
             recipients = list(set([str(us.email) for us in User.objects.filter(is_superuser=True)]))
             text = f"""
             New Post - title: {self.title} has been added by {user} \n
-            admin link: {settings.SITE_HOST}{admin_url}\n
             site link: {settings.SITE_HOST}{self.get_absolute_url()} \n"""
-            email_new_record.apply_async(
-                (
-                    subject,
-                    text,
-                    from_email,
-                    recipients,
-                ),
-            )
+            if self.user.is_superuser or self.user.is_staff:
+                text = text + f"admin link: {settings.SITE_HOST}{admin_url}\n"
+            _email_sender(subject, text, from_email, recipients)
+            # email_new_record.apply_async(
+            #     (
+            #         subject,
+            #         text,
+            #         from_email,
+            #         recipients,
+            #     ),
+            # )
 
 
 class Comment(models.Model):
@@ -90,22 +103,14 @@ class Comment(models.Model):
                 user = "Anonymous"
 
             from_email = settings.EMAIL_HOST
+            recipients = list(set([*[str(u.email) for u in User.objects.filter(is_superuser=True)]]))
+            user_recipient = [self.post.user.email]
             admin_url = reverse("admin:blog_comment_change", args=(self.pk,))
-            recipients = list(
-                set([*[str(u.email) for u in User.objects.filter(is_superuser=True)], self.post.user.email])
-            )
+            admin_text_link = f"admin link: {settings.SITE_HOST}{admin_url}\n"
             text = (
                 f"New comment for Post title:{self.post.title},\n"
-                f"admin link: {settings.SITE_HOST}{admin_url}\n"
                 f"site link: {settings.SITE_HOST}{self.post.get_absolute_url()}\n"
                 f"has been added by {user} user"
             )
-
-            email_new_record.apply_async(
-                (
-                    subject,
-                    text,
-                    from_email,
-                    recipients,
-                ),
-            )
+            _email_sender(subject, str(text + admin_text_link), from_email, recipients)
+            _email_sender(subject, text, from_email, user_recipient)

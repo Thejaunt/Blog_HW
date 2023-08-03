@@ -30,7 +30,7 @@
         {% for comment in page_obj %}
 
             {% if comment.user %}
-                <p>{{ comment.user }} |
+                <p>{{ comment.user.username }} |
             {% else %}
                 <p>Anonymous user |
             {% endif %}

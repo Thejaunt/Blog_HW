@@ -28,6 +28,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     "django_cleanup.apps.CleanupConfig",
+    "celery",
+
     "accounts.apps.AccountsConfig",
     "blog.apps.BlogConfig",
 ]
