@@ -37,8 +37,6 @@ class Post(models.Model):
         return f"{self.title}"
 
     def get_absolute_url(self):
-        from django.urls import reverse
-
         return reverse("blog:post-detail", args=[str(self.pk)])
 
     def save(self, *args, **kwargs):
@@ -61,15 +59,8 @@ class Post(models.Model):
             site link: {settings.SITE_HOST}{self.get_absolute_url()} \n"""
             if self.user.is_superuser or self.user.is_staff:
                 text = text + f"admin link: {settings.SITE_HOST}{admin_url}\n"
+            # for settings admins and
             _email_sender(subject, text, from_email, recipients)
-            # email_new_record.apply_async(
-            #     (
-            #         subject,
-            #         text,
-            #         from_email,
-            #         recipients,
-            #     ),
-            # )
 
 
 class Comment(models.Model):
@@ -112,5 +103,7 @@ class Comment(models.Model):
                 f"site link: {settings.SITE_HOST}{self.post.get_absolute_url()}\n"
                 f"has been added by {user} user"
             )
+            # for admin
             _email_sender(subject, str(text + admin_text_link), from_email, recipients)
+            # for the post owner
             _email_sender(subject, text, from_email, user_recipient)
