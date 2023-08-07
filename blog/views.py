@@ -77,7 +77,7 @@ def post_detail_view(request, pk):
             Prefetch("comment_set", queryset=Comment.objects.filter(is_published=True).select_related("user"))
         ),
         is_published=True,
-        # approved=True,
+        approved=True,
         pk=pk,
     )
     com_count = obj.comment_set.count()

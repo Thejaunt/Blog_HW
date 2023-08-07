@@ -9,8 +9,8 @@ def make_approved(self, request, queryset):
     self.message_user(
         request,
         ngettext(
-            "%d story was successfully marked as approved.",
-            "%d stories were successfully marked as approved.",
+            "%d post was successfully marked as approved.",
+            "%d posts were successfully marked as approved.",
             updated,
         )
         % updated,
@@ -24,8 +24,8 @@ def make_unapproved(self, request, queryset):
     self.message_user(
         request,
         ngettext(
-            "%d story was successfully marked as unapproved.",
-            "%d stories were successfully marked as unapproved.",
+            "%d post was successfully marked as unapproved.",
+            "%d posts were successfully marked as unapproved.",
             updated,
         )
         % updated,
@@ -55,8 +55,8 @@ def make_unpublished(self, request, queryset):
     self.message_user(
         request,
         ngettext(
-            "%d story was successfully marked as unpublished.",
-            "%d stories were successfully marked as unpublished.",
+            "%d comment was successfully marked as unpublished.",
+            "%d comments were successfully marked as unpublished.",
             updated,
         )
         % updated,
