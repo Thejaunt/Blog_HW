@@ -4,7 +4,9 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Prefetch
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.template.loader import render_to_string
 from django.views.decorators.cache import cache_page
 
 from .forms import CreatePostForm, ContactForm, CommentForm, UpdatePostForm
@@ -18,7 +20,7 @@ def home(request):
 
 @cache_page(timeout=20)
 def public_profile(request, username):
-    ob = Post.objects.filter(is_published=True)
+    ob = Post.objects.filter(is_published=True, approved=True)
     objs = (
         get_user_model()
         .objects.select_related("profile")
@@ -133,8 +135,8 @@ def update_post(request, pk):
     if request.method == "POST":
         if form.is_valid():
             if form.has_changed():
-                form.save(commit=False)
-                obj.approved = False
+                # form.save(commit=False)
+                # obj.approved = False
                 form.save()
                 messages.success(request, "The post has been updated. And Under admins review")
             else:
@@ -175,3 +177,35 @@ def contact_us(request):
             messages.success(request, "Your message has been successfully sent to admin")
             return redirect("blog:home")
     return render(request, "blog/contact-us.html", {"form": form})
+
+
+def ajax_contact_us2(request):
+    data = dict()
+    if request.method == "POST":
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            subject = "Hallo Admin"
+            from_email = settings.EMAIL_HOST
+            user_email = form.cleaned_data.get("email")
+            admins = get_user_model().objects.filter(is_superuser=True, is_active=True)
+            recipients = [*[a.email for a in admins], *[e[1] for e in settings.ADMINS]]
+            recipients = list(set(recipients))
+            text = form.cleaned_data.get("text")
+            email_contact_task.apply_async(
+                (
+                    user_email,
+                    subject,
+                    text,
+                    from_email,
+                    recipients,
+                ),
+            )
+            messages.success(request, "Your message has been successfully sent to admin")
+            data["form_is_valid"] = True
+            return JsonResponse(data)
+        else:
+            data["form_is_valid"] = False
+    form = ContactForm()
+    context = {"form": form}
+    data["html_form"] = render_to_string("contact-ajax/contact.html", context, request=request)
+    return JsonResponse(data)

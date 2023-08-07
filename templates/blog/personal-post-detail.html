@@ -9,12 +9,12 @@
 
   <h4>Title: {{ obj.title }}</h4>
       <p>Created by: {{ request.user.username }}</p>
-      <p>Created: {{ obj.created_at }}</p>
-      <p>Last Updated: {{ obj.updated_at }}</p>
+      <p>Created: {{ obj.created_at|date:"d.m.Y, H:i:s" }}</p>
+      <p>Last Updated: {{ obj.updated_at|date:"d.m.Y, H:i:s" }}</p>
       <p>Description: {{ obj.description }}</p>
       {% if is_creator %}
-          <button><a href="{% url 'blog:update-post' obj.pk %}">Update</a></button> |
-        <button><a href="{% url 'blog:delete-post' obj.pk %}">Delete</a></button>
+          <a href="{% url 'blog:update-post' obj.pk %}" class="btn btn-primary">Update</a> |
+        <a href="{% url 'blog:delete-post' obj.pk %}" class="btn btn-danger">Delete</a>
       {% endif %}
 
   <h4>Comments ({{ com_count }})</h4>
