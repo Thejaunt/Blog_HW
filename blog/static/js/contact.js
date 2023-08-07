@@ -12,7 +12,6 @@ $(function () {
         $("#modal-contact").modal("show");
       },
       success: function (data) {
-      console.log(data)
         $("#modal-contact .modal-content").html(data.html_form);
       }
     });
