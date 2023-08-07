@@ -1,29 +1,63 @@
 {% extends "base_generic.html" %}
+{% load static %}
 {% block title %}Personal Posts{% endblock title %}
 {% block content %}
-<form method="get">
-    <input type="hidden" name="filter" value="all">
-    <button class="btn btn-link" type="submit">all</button>
-</form>
-<form method="get">
-    <input type="hidden" name="filter" value="published">
-    <button class="btn btn-link" type="submit">published</button>
-</form>
-<form method="get">
-    <input type="hidden" name="filter" value="unpublished">
-    <button class="btn btn-link" type="submit">not published</button>
-</form>
+
+
+<div class="row justify-content-end">
+    <div class="col-3 col-lg-1">
+        <form method="get">
+            <input type="hidden" name="filter" value="all">
+            <button class="btn btn-link" type="submit">all</button>
+        </form>
+    </div>
+    <div class="col-3 col-lg-1">
+        <form method="get">
+            <input type="hidden" name="filter" value="published">
+            <button class="btn btn-link" type="submit">published</button>
+        </form>
+    </div>
+    <div class="col-3 col-lg-3">
+        <form method="get">
+            <input type="hidden" name="filter" value="unpublished">
+            <button class="btn btn-link" type="submit">not published</button>
+        </form>
+    </div>
+</div>
+
 {% for obj in objs %}
-    <h4>Title: {{ obj.title }}</h4>
-    <p>Created by: {{ request.user.username }}</p>
-    <p>Created: {{ obj.created_at }}</p>
-    <p>Last Updated: {{ obj.updated_at }}</p>
 
-    <p>Description: {{ obj.description }}</p>
-    <a href="{% url 'blog:personal-post-detail' obj.pk %}">Detail</a>
-    <br>
-    -----------------------------
-    <br>
+<div class="card mb-3">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-sm-4">
+                {% if request.user.profile.image %}
+                <img src="{{ request.user.profile.image.url }}"
+                     class="figure-img img-fluid rounded-circle"
+                     alt="Profile photo" width="40" height="40">
+                {% else %}
+                <img src="{% static 'img/dummy-prof-img.png' %}"
+                     class="figure-img img-fluid rounded-circle"
+                     alt="Profile photo" width="40" height="40">
+                {% endif %}
+                <a href="{% url 'blog:public-profile' request.user.username %}">{{ request.user.username }}</a>
+            </div>
+            <div class="col-sm-4">
+                <div class="row">
+                    <small class="text-muted">Created: {{ obj.created_at|date:"d.m.Y, H:i:s"}}</small>
+                </div>
+                <div class="row">
+                    <small class="text-muted">Last Updated: {{ obj.updated_at|date:"d.m.Y, H:i:s" }}</small >
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ obj.title }}</h5>
+        <p class="card-text">{{ obj.description|truncatewords:15 }}</p>
+        <a href="{% url 'blog:post-detail' obj.pk %}">Detail</a>
+    </div>
+</div>
+
 {% endfor %}
-
 {% endblock content %}

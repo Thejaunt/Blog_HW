@@ -27,8 +27,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
+    "whitenoise.runserver_nostatic",
     "django_cleanup.apps.CleanupConfig",
     "celery",
+    "widget_tweaks",
 
     "accounts.apps.AccountsConfig",
     "blog.apps.BlogConfig",
@@ -150,6 +152,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "accounts/static",
     BASE_DIR / "blog/static",
 ]
+
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 

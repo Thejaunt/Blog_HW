@@ -10,6 +10,7 @@ from .views import (
     posts_list_view,
     public_profile,
     update_post,
+    ajax_contact_us2,
 )
 
 app_name = "blog"
@@ -24,4 +25,5 @@ urlpatterns = [
     path("delete-post/<int:pk>", delete_post_view, name="delete-post"),
     path("public-profile/<str:username>", public_profile, name="public-profile"),
     path("contact-us", contact_us, name="contact-us"),
+    path("ajax", ajax_contact_us2, name="create-form"),
 ]
